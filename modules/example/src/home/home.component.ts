@@ -3,7 +3,7 @@ import { IAction } from '../interfaces/action.interface';
 
 @Component({
     selector: 'app-home',
-    styleUrls: ['./home.component.scss'],
+    styleUrls: ['./home.component.css'],
     templateUrl: './home.component.html'
 })
 export class HomeComponent {
