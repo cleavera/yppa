@@ -1,6 +1,9 @@
-import { ClassDeclaration, ClassInstancePropertyTypes, Decorator, Expression, ObjectLiteralElementLike, ObjectLiteralExpression, PropertyAssignment, Symbol } from 'ts-simple-ast';
-import { ComponentDoesNotHaveStaticSelectorError } from '../errors/component-does-not-have-static-selector.error';
+import { readFileSync } from 'fs';
+import { join } from 'path';
+
+import { ClassDeclaration, ClassInstancePropertyTypes, Decorator, Expression, NoSubstitutionTemplateLiteral, ObjectLiteralElementLike, ObjectLiteralExpression, PropertyAssignment, StringLiteral, Symbol } from 'ts-simple-ast';
 import { DeclarationNotAComponentError } from '../errors/declaration-not-a-component.error';
+import { ExpressionNotLiteralValueError } from '../errors/expression-not-literal-value.error';
 import { PropertyDoesNotHaveANameError } from '../errors/property-does-not-have-a-name.error';
 import { Property } from './property';
 import { PropertyFactory } from './property-factory';
@@ -8,15 +11,18 @@ import { PropertyFactory } from './property-factory';
 export class Component {
     public properties: Array<Property>;
     public selector: string;
+    public template: string;
 
-    constructor(properties: Array<Property>, selector: string) {
+    constructor(properties: Array<Property>, selector: string, template: string) {
         this.properties = properties;
         this.selector = selector;
+        this.template = template;
     }
 
     public static FromDeclaration(declaration: ClassDeclaration): Component {
         let isComponent: boolean = false;
         let selector: string = '';
+        let template: string = '';
 
         declaration.getDecorators().forEach((decorator: Decorator) => {
             if (decorator.getName() === 'Component') {
@@ -32,25 +38,17 @@ export class Component {
                     }
 
                     if (symbol.getName() === 'selector') {
-                        if (!(prop instanceof PropertyAssignment)) {
-                            throw new ComponentDoesNotHaveStaticSelectorError(declaration.getText());
-                        }
+                        selector = this.getLiteralValue(prop);
+                    } else if (symbol.getName() === 'templateUrl') {
+                        const path: string = join(declaration.getSourceFile().getDirectoryPath(), this.getLiteralValue(prop));
 
-                        const initializer: Expression | undefined = prop.getInitializer();
-
-                        if (!initializer) {
-                            throw new ComponentDoesNotHaveStaticSelectorError(declaration.getText());
-                        }
-
-                        selector = initializer.getText();
+                        template = readFileSync(path).toString();
+                    } else if (symbol.getName() === 'template') {
+                        template = this.getLiteralValue(prop);
                     }
                 });
             });
         });
-
-        if (!selector) {
-            throw new ComponentDoesNotHaveStaticSelectorError(declaration.getText());
-        }
 
         if (!isComponent) {
             throw new DeclarationNotAComponentError(declaration.getName());
@@ -60,6 +58,20 @@ export class Component {
             return PropertyFactory.FromProperty(property);
         });
 
-        return new Component(properties, selector);
+        return new Component(properties, selector, template);
+    }
+
+    private static getLiteralValue(prop: ObjectLiteralElementLike): string {
+        if (!(prop instanceof PropertyAssignment)) {
+            throw new ExpressionNotLiteralValueError(prop.getText());
+        }
+
+        const initializer: Expression | undefined = prop.getInitializer();
+
+        if (!initializer || !((initializer instanceof StringLiteral) || (initializer instanceof NoSubstitutionTemplateLiteral))) {
+            throw new ExpressionNotLiteralValueError(prop.getText());
+        }
+
+        return initializer.getLiteralValue();
     }
 }
