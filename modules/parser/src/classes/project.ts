@@ -2,17 +2,23 @@ import { ClassDeclaration, Project as ProjectAST, SourceFile } from 'ts-simple-a
 import { Component } from './component';
 
 export class Project {
+    public components: Array<Component>;
+
+    constructor(components: Array<Component>) {
+        this.components = components;
+    }
+
     public static FromGlob(glob: string): Project {
         const ast: ProjectAST = new ProjectAST({});
 
         ast.addExistingSourceFiles(glob);
 
-        ast.getSourceFiles().forEach((file: SourceFile) => {
-            file.getClasses().forEach((item: ClassDeclaration) => {
-                console.log(Component.FromDeclaration(item));
-            });
-        });
+        const components: Array<Component> = ast.getSourceFiles().reduce((acc: Array<Component>, file: SourceFile) => {
+            return acc.concat(file.getClasses().map((item: ClassDeclaration) => {
+                return Component.FromDeclaration(item);
+            }));
+        }, []);
 
-        return new Project();
+        return new Project(components);
     }
 }

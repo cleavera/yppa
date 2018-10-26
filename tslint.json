@@ -28,7 +28,7 @@
         "private-instance-method"
       ]
     }],
-    "no-any": true,
+    "no-any": false,
     "no-empty-interface": true,
     "no-import-side-effect": false,
     "no-inferrable-types": false,

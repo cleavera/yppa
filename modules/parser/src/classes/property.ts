@@ -1,1 +1,7 @@
-export class Property {}
+export class Property {
+    public name: string;
+
+    constructor(name: string) {
+        this.name = name;
+    }
+}
