@@ -12,6 +12,7 @@
   },
   "author": "Anthony Cleaver",
   "license": "ISC",
+  "private": true,
   "devDependencies": {
     "@angular/core": "^7.0.1",
     "@types/node": "^10.12.0",

@@ -1,6 +1,6 @@
 {
   "name": "@yppa/cli",
-  "version": "1.0.0",
+  "version": "0.2.0",
   "description": "",
   "bin": {
     "yppa": "./dist/index.js"
@@ -20,8 +20,8 @@
     "typescript": "^3.1.6"
   },
   "dependencies": {
-    "@yppa/generator": "file:yppa-generator-1.0.0.tgz",
-    "@yppa/parser": "file:yppa-parser-1.0.0.tgz",
+    "@yppa/generator": "^0.2.0",
+    "@yppa/parser": "^0.1.0",
     "yargs": "^12.0.2"
   }
 }
