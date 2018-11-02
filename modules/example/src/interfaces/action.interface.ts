@@ -1,5 +1,4 @@
 export interface IAction {
-    link: string;
-    name: string;
-    action(): void;
+    url: string;
+    label: string;
 }

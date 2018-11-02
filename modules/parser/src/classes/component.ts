@@ -1,7 +1,7 @@
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
-import { ClassDeclaration, ClassInstancePropertyTypes, Decorator, Expression, NoSubstitutionTemplateLiteral, ObjectLiteralElementLike, ObjectLiteralExpression, PropertyAssignment, StringLiteral, Symbol } from 'ts-simple-ast';
+import { ClassDeclaration, Decorator, Expression, NoSubstitutionTemplateLiteral, ObjectLiteralElementLike, ObjectLiteralExpression, PropertyAssignment, PropertyDeclaration, StringLiteral, Symbol } from 'ts-simple-ast';
 import { DeclarationNotAComponentError } from '../errors/declaration-not-a-component.error';
 import { ExpressionNotLiteralValueError } from '../errors/expression-not-literal-value.error';
 import { PropertyDoesNotHaveANameError } from '../errors/property-does-not-have-a-name.error';
@@ -54,8 +54,8 @@ export class Component {
             throw new DeclarationNotAComponentError(declaration.getName());
         }
 
-        const properties: Array<Property> = declaration.getInstanceProperties().map((property: ClassInstancePropertyTypes): Property => {
-            return PropertyFactory.FromProperty(property);
+        const properties: Array<Property> = declaration.getInstanceProperties().map((property: PropertyDeclaration): Property => {
+            return PropertyFactory.FromProperty(property.getType(), property.getSymbol());
         });
 
         return new Component(properties, selector, template);
