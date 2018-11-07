@@ -2,6 +2,7 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 
 import { ClassDeclaration, Decorator, Expression, NoSubstitutionTemplateLiteral, ObjectLiteralElementLike, ObjectLiteralExpression, PropertyAssignment, PropertyDeclaration, StringLiteral, Symbol } from 'ts-simple-ast';
+import { ClassDoesNotHaveANameError } from '../errors/class-does-not-have-a-name.error';
 import { DeclarationNotAComponentError } from '../errors/declaration-not-a-component.error';
 import { ExpressionNotLiteralValueError } from '../errors/expression-not-literal-value.error';
 import { PropertyDoesNotHaveANameError } from '../errors/property-does-not-have-a-name.error';
@@ -12,12 +13,14 @@ export class Component {
     public properties: Array<Property>;
     public inputs: Array<Property>;
     public outputs: Array<Property>;
+    public name: string;
     public selector: string;
     public template: string;
 
-    constructor(properties: Array<Property>, selector: string, template: string) {
+    constructor(properties: Array<Property>, selector: string, template: string, name: string) {
         this.selector = selector;
         this.template = template;
+        this.name = name;
         this.properties = properties;
 
         this.inputs = properties.filter((property: Property) => {
@@ -41,19 +44,19 @@ export class Component {
 
             decorator.getArguments().forEach((arg: ObjectLiteralExpression) => {
                 arg.getProperties().forEach((prop: ObjectLiteralElementLike) => {
-                    const symbol: Symbol | void = prop.getSymbol();
+                    const propertySymbol: Symbol | void = prop.getSymbol();
 
-                    if (!symbol) {
+                    if (!propertySymbol) {
                         throw new PropertyDoesNotHaveANameError(prop.getText());
                     }
 
-                    if (symbol.getName() === 'selector') {
+                    if (propertySymbol.getName() === 'selector') {
                         selector = this.getLiteralValue(prop);
-                    } else if (symbol.getName() === 'templateUrl') {
+                    } else if (propertySymbol.getName() === 'templateUrl') {
                         const path: string = join(declaration.getSourceFile().getDirectoryPath(), this.getLiteralValue(prop));
 
                         template = readFileSync(path).toString();
-                    } else if (symbol.getName() === 'template') {
+                    } else if (propertySymbol.getName() === 'template') {
                         template = this.getLiteralValue(prop);
                     }
                 });
@@ -68,7 +71,13 @@ export class Component {
             return PropertyFactory.FromProperty(property.getType(), property.getSymbol(), property.getDecorators());
         });
 
-        return new Component(properties, selector, template);
+        const symbol: Symbol | void = declaration.getSymbol();
+
+        if (!symbol) {
+            throw new ClassDoesNotHaveANameError(declaration.getText());
+        }
+
+        return new Component(properties, selector, template, symbol.getName());
     }
 
     private static getLiteralValue(prop: ObjectLiteralElementLike): string {
