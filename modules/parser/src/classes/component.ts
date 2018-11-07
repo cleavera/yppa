@@ -10,13 +10,23 @@ import { PropertyFactory } from './property-factory';
 
 export class Component {
     public properties: Array<Property>;
+    public inputs: Array<Property>;
+    public outputs: Array<Property>;
     public selector: string;
     public template: string;
 
     constructor(properties: Array<Property>, selector: string, template: string) {
-        this.properties = properties;
         this.selector = selector;
         this.template = template;
+        this.properties = properties;
+
+        this.inputs = properties.filter((property: Property) => {
+            return !!property.bindingName;
+        });
+
+        this.outputs = properties.filter((property: Property) => {
+            return !!property.eventName;
+        });
     }
 
     public static FromDeclaration(declaration: ClassDeclaration): Component {
@@ -55,7 +65,7 @@ export class Component {
         }
 
         const properties: Array<Property> = declaration.getInstanceProperties().map((property: PropertyDeclaration): Property => {
-            return PropertyFactory.FromProperty(property.getType(), property.getSymbol());
+            return PropertyFactory.FromProperty(property.getType(), property.getSymbol(), property.getDecorators());
         });
 
         return new Component(properties, selector, template);
