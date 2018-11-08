@@ -1,7 +1,7 @@
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
-import { ClassDeclaration, Decorator, Expression, NoSubstitutionTemplateLiteral, ObjectLiteralElementLike, ObjectLiteralExpression, PropertyAssignment, PropertyDeclaration, StringLiteral, Symbol } from 'ts-simple-ast';
+import { ClassDeclaration, ConstructorDeclaration, Decorator, Expression, NoSubstitutionTemplateLiteral, ObjectLiteralElementLike, ObjectLiteralExpression, ParameterDeclaration, PropertyAssignment, PropertyDeclaration, StringLiteral, Symbol } from 'ts-simple-ast';
 import { ClassDoesNotHaveANameError } from '../errors/class-does-not-have-a-name.error';
 import { DeclarationNotAComponentError } from '../errors/declaration-not-a-component.error';
 import { ExpressionNotLiteralValueError } from '../errors/expression-not-literal-value.error';
@@ -13,14 +13,16 @@ export class Component {
     public properties: Array<Property>;
     public inputs: Array<Property>;
     public outputs: Array<Property>;
+    public providers: Array<Property>;
     public name: string;
     public selector: string;
     public template: string;
 
-    constructor(properties: Array<Property>, selector: string, template: string, name: string) {
+    constructor(properties: Array<Property>, selector: string, template: string, name: string, providers: Array<Property>) {
         this.selector = selector;
         this.template = template;
         this.name = name;
+        this.providers = providers;
         this.properties = properties;
 
         this.inputs = properties.filter((property: Property) => {
@@ -67,6 +69,12 @@ export class Component {
             throw new DeclarationNotAComponentError(declaration.getName());
         }
 
+        const providers: Array<Property> = declaration.getConstructors().reduce((arr: Array<Property>, constructor: ConstructorDeclaration) => {
+            return arr.concat(constructor.getParameters().map((parameter: ParameterDeclaration) => {
+                return PropertyFactory.FromProperty(parameter.getType(), parameter.getSymbol());
+            }));
+        }, []);
+
         const properties: Array<Property> = declaration.getInstanceProperties().map((property: PropertyDeclaration): Property => {
             return PropertyFactory.FromProperty(property.getType(), property.getSymbol(), property.getDecorators());
         });
@@ -77,7 +85,7 @@ export class Component {
             throw new ClassDoesNotHaveANameError(declaration.getText());
         }
 
-        return new Component(properties, selector, template, symbol.getName());
+        return new Component(properties, selector, template, symbol.getName(), providers);
     }
 
     private static getLiteralValue(prop: ObjectLiteralElementLike): string {
