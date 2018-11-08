@@ -1,8 +1,9 @@
-import { Decorator, Node, Symbol, Type } from 'ts-simple-ast';
+import { Decorator, Node, Signature, Symbol, Type } from 'ts-simple-ast';
 import { NativeType } from '../constants/native-type.constant';
 import { PropertyDoesNotHaveANameError } from '../errors/property-does-not-have-a-name.error';
 import { PropertyHasNoDeclarationError } from '../errors/property-has-no-declaration.error';
 import { ComplexProperty } from './complex-property';
+import { MethodProperty } from './method-property';
 import { NativeProperty } from './native-property';
 import { Property } from './property';
 
@@ -49,6 +50,12 @@ export class PropertyFactory {
 
         if (text === 'any' || text === 'unknown') {
             return new NativeProperty(NativeType.unknown, propertySymbol.getName(), bindingName, eventName);
+        }
+
+        const callSignature: Array<Signature> = type.getCallSignatures();
+
+        if (callSignature.length) {
+            return new MethodProperty(this.FromProperty(callSignature[0].getReturnType(), propertySymbol), propertySymbol.getName());
         }
 
         const properties: Array<Symbol> = type.getProperties();
