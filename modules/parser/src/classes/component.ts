@@ -6,6 +6,7 @@ import { ClassDoesNotHaveANameError } from '../errors/class-does-not-have-a-name
 import { DeclarationNotAComponentError } from '../errors/declaration-not-a-component.error';
 import { ExpressionNotLiteralValueError } from '../errors/expression-not-literal-value.error';
 import { PropertyDoesNotHaveANameError } from '../errors/property-does-not-have-a-name.error';
+import { Element } from './element';
 import { Property } from './property';
 import { PropertyFactory } from './property-factory';
 
@@ -14,17 +15,15 @@ export class Component {
     public inputs: Array<Property>;
     public outputs: Array<Property>;
     public providers: Array<Property>;
+    public element: Element;
     public name: string;
-    public selector: string;
     public template: string;
 
     constructor(properties: Array<Property>, selector: string, template: string, name: string, providers: Array<Property>) {
-        this.selector = selector;
         this.template = template;
         this.name = name;
         this.providers = providers;
         this.properties = properties;
-
         this.inputs = properties.filter((property: Property) => {
             return !!property.bindingName;
         });
@@ -32,6 +31,8 @@ export class Component {
         this.outputs = properties.filter((property: Property) => {
             return !!property.eventName;
         });
+
+        this.element = Element.FromSelector(selector, this.inputs, this.outputs);
     }
 
     public static FromDeclaration(declaration: ClassDeclaration): Component {
