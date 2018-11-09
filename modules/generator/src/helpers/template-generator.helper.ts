@@ -27,7 +27,7 @@ export function $templateGenerator(element: Element): string {
             continue;
         }
 
-        template += ` [${property}]=${element.propertyBindings[property]}`;
+        template += ` [${property}]="${element.propertyBindings[property]}"`;
     }
 
     for (const event in element.eventBindings) {
@@ -35,7 +35,7 @@ export function $templateGenerator(element: Element): string {
             continue;
         }
 
-        template += ` [${event}]="${element.eventBindings[event]}"`;
+        template += ` (${event})="${element.eventBindings[event]}"`;
     }
 
     template += `></${element.tag}>`;
