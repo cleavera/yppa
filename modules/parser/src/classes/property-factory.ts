@@ -1,5 +1,6 @@
-import { Decorator, Node, Signature, Symbol, Type } from 'ts-simple-ast';
+import { Decorator, Node, Signature, StringLiteral, Symbol, Type } from 'ts-simple-ast';
 import { NativeType } from '../constants/native-type.constant';
+import { DecoratorNotStringError } from '../errors/decorator-not-string.error';
 import { PropertyDoesNotHaveANameError } from '../errors/property-does-not-have-a-name.error';
 import { PropertyHasNoDeclarationError } from '../errors/property-has-no-declaration.error';
 import { ComplexProperty } from './complex-property';
@@ -20,16 +21,28 @@ export class PropertyFactory {
 
         decorators.forEach((decorator: Decorator) => {
             if (decorator.getName() === 'Input') {
-                if (decorator.getArguments()[0]) {
-                    bindingName = decorator.getArguments()[0].getText();
+                const argument: Node = decorator.getArguments()[0];
+
+                if (argument) {
+                    if (!(argument instanceof StringLiteral)) {
+                        throw new DecoratorNotStringError(argument.getText());
+                    }
+
+                    bindingName = argument.getLiteralValue();
                 } else {
                     bindingName = propertySymbol.getName();
                 }
             }
 
             if (decorator.getName() === 'Output') {
-                if (decorator.getArguments()[0]) {
-                    eventName = decorator.getArguments()[0].getText();
+                const argument: Node = decorator.getArguments()[0];
+
+                if (argument) {
+                    if (!(argument instanceof StringLiteral)) {
+                        throw new DecoratorNotStringError(argument.getText());
+                    }
+
+                    eventName = argument.getLiteralValue();
                 } else {
                     eventName = propertySymbol.getName();
                 }
