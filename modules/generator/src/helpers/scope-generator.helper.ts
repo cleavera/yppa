@@ -1,4 +1,4 @@
-import { ComplexProperty, NativeProperty, NativeType, Property } from '@yppa/parser';
+import { ComplexProperty, MethodProperty, NativeProperty, NativeType, Property } from '@yppa/parser';
 
 export function $scopeGenerator(props: Array<Property>): any {
     return generateComplexProperty(props);
@@ -14,10 +14,32 @@ function generateComplexProperty(properties: Array<Property>, scope: any = {}, p
             acc[newPath.join('.')] = generateNativeProperty(property);
         } else if (property instanceof ComplexProperty) {
             generateComplexProperty(property.children, acc, newPath);
+        } else if (property instanceof MethodProperty) {
+            acc[newPath.join('.')] = generateMethodProperty(property);
         }
 
         return acc;
     }, scope);
+}
+
+function generateMethodProperty(property: MethodProperty): () => unknown {
+    const returnValue: Property = property.returnValue;
+
+    if (returnValue instanceof MethodProperty) {
+        return (): unknown => {
+            return generateMethodProperty(returnValue);
+        };
+    } else if (returnValue instanceof ComplexProperty) {
+        return (): unknown => {
+            return generateComplexProperty(returnValue.children);
+        };
+    } else if (returnValue instanceof NativeProperty) {
+        return (): unknown => {
+            return generateNativeProperty(returnValue);
+        };
+    }
+
+    throw new Error(`Property type not recognized ${property}`);
 }
 
 function generateNativeProperty(property: NativeProperty): unknown {
