@@ -1,6 +1,6 @@
 {
   "name": "@yppa/cli",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "",
   "bin": {
     "yppa": "./dist/index.js"
@@ -9,7 +9,7 @@
     "build": "tsc",
     "test": "alsatian ./src/**/*.spec.ts",
     "lint": "tslint --project ./tsconfig.json",
-    "prepublish": "npm run lint && npm run build"
+    "prepack": "npm run lint && npm run build"
   },
   "author": "Anthony Cleaver",
   "license": "ISC",
@@ -20,8 +20,8 @@
     "typescript": "^3.1.6"
   },
   "dependencies": {
-    "@yppa/generator": "^0.2.0",
-    "@yppa/parser": "^0.1.0",
+    "@yppa/generator": "^0.3.0",
+    "@yppa/parser": "^0.2.0",
     "yargs": "^12.0.2"
   }
 }

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { $scopeGenerator, $templateGenerator } from '@yppa/generator';
+import { $orchestratorGenerator } from '@yppa/generator';
 import { Component, Project } from '@yppa/parser';
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import { join } from 'path';
@@ -12,14 +12,11 @@ if (!src || !out) {
 }
 
 Project.FromGlob(src).components.forEach((component: Component) => {
-    const scope: any = $scopeGenerator(component.properties);
-    const template: string = $templateGenerator(component.template, scope);
-
     if (!existsSync(out)) {
         mkdirSync(out, {
             recursive: true
         });
     }
 
-    writeFileSync(join(out, component.selector + '.html'), template);
+    writeFileSync(join(out, component.element.selector + '.ts'), $orchestratorGenerator(component));
 });
