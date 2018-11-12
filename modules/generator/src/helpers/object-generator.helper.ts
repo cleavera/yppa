@@ -2,20 +2,16 @@ import { ComplexProperty, MethodProperty, NativeProperty, Property } from '@yppa
 import { $generateMethodProperty } from './method-generator.helper';
 import { $generateNativeProperty } from './property-generator.helper';
 
-export function $generateObject(properties: Array<Property>, scope: any = {}, path: Array<string> = []): any {
+export function $generateObject(properties: Array<Property>): any {
     return properties.reduce((acc: any, property: Property) => {
-        const newPath: Array<string> = path.slice();
-
-        newPath.push(property.name);
-
         if (property instanceof NativeProperty) {
-            acc[newPath.join('.')] = $generateNativeProperty(property);
+            acc[property.name] = $generateNativeProperty(property);
         } else if (property instanceof ComplexProperty) {
-            $generateObject(property.children, acc, newPath);
+            acc[property.name] = $generateObject(property.children);
         } else if (property instanceof MethodProperty) {
-            acc[newPath.join('.')] = $generateMethodProperty(property);
+            acc[property.name] = $generateMethodProperty(property);
         }
 
         return acc;
-    }, scope);
+    }, {});
 }
