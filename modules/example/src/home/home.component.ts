@@ -12,7 +12,7 @@ export class HomeComponent {
     public helloWorld: string;
 
     @Input('mhrHelloWorld')
-    public hello2World: string;
+    public hello2World: IAction;
 
     @Output()
     public onClick: EventEmitter<void> = new EventEmitter();
