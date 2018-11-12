@@ -19,5 +19,5 @@ export function $generateMethodProperty(property: MethodProperty): () => unknown
         };
     }
 
-    throw new Error(`Property type not recognized ${property}`);
+    throw new Error(`Property type not recognized ${property.returnValue}`);
 }
