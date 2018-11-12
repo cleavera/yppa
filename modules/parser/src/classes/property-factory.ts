@@ -27,7 +27,6 @@ export class PropertyFactory {
                     if (!(argument instanceof StringLiteral)) {
                         throw new DecoratorNotStringError(argument.getText());
                     }
-
                     bindingName = argument.getLiteralValue();
                 } else {
                     bindingName = propertySymbol.getName();
@@ -82,7 +81,7 @@ export class PropertyFactory {
                 }
 
                 return this.FromProperty(declaration.getType(), child);
-            }), propertySymbol.getName());
+            }), propertySymbol.getName(), bindingName, eventName);
         }
 
         return new Property(propertySymbol.getName());
