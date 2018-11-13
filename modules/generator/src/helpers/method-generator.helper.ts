@@ -1,4 +1,5 @@
 import { ComplexProperty, MethodProperty, NativeProperty, Property } from '@yppa/parser';
+import { PropertyNotImplementedError } from '../errors/property-not-implemented.error';
 import { $generateObject } from './object-generator.helper';
 import { $generateNativeProperty } from './property-generator.helper';
 
@@ -19,5 +20,5 @@ export function $generateMethodProperty(property: MethodProperty): () => unknown
         };
     }
 
-    throw new Error(`Property type not recognized ${property.returnValue}`);
+    throw new PropertyNotImplementedError(property.returnValue);
 }

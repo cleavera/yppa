@@ -1,6 +1,6 @@
 import { NativeProperty, NativeType } from '@yppa/parser';
 
-export function $generateNativeProperty(property: NativeProperty): unknown {
+export function $generateNativeProperty(property: NativeProperty): string | number | boolean {
     if (property.type === NativeType.string) {
         return 'String';
     }
