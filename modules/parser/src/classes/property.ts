@@ -1,9 +1,11 @@
+import { Maybe } from '@cleavera/utils/dist';
+
 export class Property {
     public name: string;
-    public bindingName: string | null;
-    public eventName: string | null;
+    public bindingName: Maybe<string>;
+    public eventName: Maybe<string>;
 
-    constructor(name: string, bindingName: string | null = null, eventName: string | null = null) {
+    constructor(name: string, bindingName: Maybe<string> = null, eventName: Maybe<string> = null) {
         this.name = name;
         this.bindingName = bindingName;
         this.eventName = eventName;

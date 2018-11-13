@@ -1,3 +1,4 @@
+import { $isNull, Maybe } from '@cleavera/utils/dist';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
@@ -47,9 +48,9 @@ export class Component {
 
             decorator.getArguments().forEach((arg: ObjectLiteralExpression) => {
                 arg.getProperties().forEach((prop: ObjectLiteralElementLike) => {
-                    const propertySymbol: Symbol | void = prop.getSymbol();
+                    const propertySymbol: Maybe<Symbol> = prop.getSymbol() || null;
 
-                    if (!propertySymbol) {
+                    if ($isNull(propertySymbol)) {
                         throw new PropertyDoesNotHaveANameError(prop.getText());
                     }
 
@@ -80,9 +81,9 @@ export class Component {
             return PropertyFactory.FromProperty(property.getType(), property.getSymbol(), property.getDecorators());
         });
 
-        const symbol: Symbol | void = declaration.getSymbol();
+        const symbol: Maybe<Symbol> = declaration.getSymbol() || null;
 
-        if (!symbol) {
+        if ($isNull(symbol)) {
             throw new ClassDoesNotHaveANameError(declaration.getText());
         }
 
@@ -94,9 +95,9 @@ export class Component {
             throw new ExpressionNotLiteralValueError(prop.getText());
         }
 
-        const initializer: Expression | undefined = prop.getInitializer();
+        const initializer: Maybe<Expression> = prop.getInitializer() || null;
 
-        if (!initializer || !((initializer instanceof StringLiteral) || (initializer instanceof NoSubstitutionTemplateLiteral))) {
+        if ($isNull(initializer) || !((initializer instanceof StringLiteral) || (initializer instanceof NoSubstitutionTemplateLiteral))) {
             throw new ExpressionNotLiteralValueError(prop.getText());
         }
 

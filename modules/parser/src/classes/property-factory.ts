@@ -1,3 +1,4 @@
+import { $isNull, Maybe } from '@cleavera/utils/dist';
 import { Decorator, Node, Signature, StringLiteral, Symbol, Type } from 'ts-simple-ast';
 import { NativeType } from '../constants/native-type.constant';
 import { DecoratorNotStringError } from '../errors/decorator-not-string.error';
@@ -9,15 +10,15 @@ import { NativeProperty } from './native-property';
 import { Property } from './property';
 
 export class PropertyFactory {
-    public static FromProperty(type: Type, propertySymbol: Symbol | void, decorators: Array<Decorator> = []): Property {
-        if (!propertySymbol) {
+    public static FromProperty(type: Type, propertySymbol: Maybe<Symbol> = null, decorators: Array<Decorator> = []): Property {
+        if ($isNull(propertySymbol)) {
             throw new PropertyDoesNotHaveANameError(type.getText());
         }
 
         const text: string = type.getText();
 
-        let bindingName: string | null = null;
-        let eventName: string | null = null;
+        let bindingName: Maybe<string> = null;
+        let eventName: Maybe<string> = null;
 
         decorators.forEach((decorator: Decorator) => {
             if (decorator.getName() === 'Input') {
@@ -74,9 +75,9 @@ export class PropertyFactory {
 
         if (properties.length) {
             return new ComplexProperty(properties.map((child: Symbol) => {
-                const declaration: Node | void = child.getValueDeclaration();
+                const declaration: Maybe<Node> = child.getValueDeclaration() || null;
 
-                if (!declaration) {
+                if ($isNull(declaration)) {
                     throw new PropertyHasNoDeclarationError(child.getName());
                 }
 
