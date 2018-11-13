@@ -1,3 +1,4 @@
+export { Provider } from './classes/provider';
 export { MethodProperty } from './classes/method-property';
 export { Component } from './classes/component';
 export { ComplexProperty } from './classes/complex-property';

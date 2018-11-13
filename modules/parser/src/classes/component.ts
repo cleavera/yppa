@@ -10,17 +10,18 @@ import { PropertyDoesNotHaveANameError } from '../errors/property-does-not-have-
 import { Element } from './element';
 import { Property } from './property';
 import { PropertyFactory } from './property-factory';
+import { Provider } from './provider';
 
 export class Component {
     public properties: Array<Property>;
     public inputs: Array<Property>;
     public outputs: Array<Property>;
-    public providers: Array<Property>;
+    public providers: Array<Provider>;
     public element: Element;
     public name: string;
     public template: string;
 
-    constructor(properties: Array<Property>, selector: string, template: string, name: string, providers: Array<Property>) {
+    constructor(properties: Array<Property>, selector: string, template: string, name: string, providers: Array<Provider>) {
         this.template = template;
         this.name = name;
         this.providers = providers;
@@ -71,10 +72,12 @@ export class Component {
             throw new DeclarationNotAComponentError(declaration.getName());
         }
 
-        const providers: Array<Property> = declaration.getConstructors().reduce((arr: Array<Property>, constructor: ConstructorDeclaration) => {
-            return arr.concat(constructor.getParameters().map((parameter: ParameterDeclaration) => {
-                return PropertyFactory.FromProperty(parameter.getType(), parameter.getSymbol());
-            }));
+        const providers: Array<Provider> = declaration
+            .getConstructors()
+            .reduce<Array<Provider>>((arr: Array<Provider>, constructor: ConstructorDeclaration): Array<Provider> => {
+                return arr.concat(constructor.getParameters().map((parameter: ParameterDeclaration): Provider => {
+                    return Provider.FromType(parameter.getType(), parameter.getSymbol(), parameter.getDecorators());
+                }));
         }, []);
 
         const properties: Array<Property> = declaration.getInstanceProperties().map((property: PropertyDeclaration): Property => {
