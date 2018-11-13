@@ -1,6 +1,6 @@
 {
   "name": "@yppa/generator",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
@@ -19,6 +19,6 @@
   },
   "dependencies": {
     "@cleavera/utils": "^1.1.0",
-    "@yppa/parser": "^0.2.0"
+    "@yppa/parser": "^0.3.0"
   }
 }
