@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { $orchestratorGenerator } from '@yppa/generator';
+import { $documentationGenerator } from '@yppa/generator';
 import { Component, Project } from '@yppa/parser';
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import { join } from 'path';
@@ -18,5 +18,5 @@ Project.FromGlob(src).components.forEach((component: Component) => {
         });
     }
 
-    writeFileSync(join(out, component.element.selector + '.ts'), $orchestratorGenerator(component));
+    writeFileSync(join(out, component.element.selector + '.ts'), $documentationGenerator(component));
 });
