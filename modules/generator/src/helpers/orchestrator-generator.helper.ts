@@ -1,27 +1,26 @@
-import { Component, Property, Provider } from '@yppa/parser';
-import { $providerGenerator } from './provider-generator.helper';
+import { Component, Property } from '@yppa/parser';
+import { Declaration } from '../classes/declaration';
 import { $templateGenerator } from './template-generator.helper';
 import { $typeGenerator } from './type-generator.helper';
 
-export function $orchestratorGenerator(component: Component): string {
+export function $orchestratorGenerator(component: Component): Declaration {
     const template: string = $templateGenerator(component.element);
+    const name: string = `${component.name}DocumentationComponent`;
 
-    return `
-        import { Component } from '@angular/core';
-
-        ${generateTokens(component.providers)}
-
+    return new Declaration(name, `
         @Component({
-            providers: [${component.providers.map((provider: Provider) => {
-                return $providerGenerator(provider);
-            }).join(', ')}],
             template: \`${template}\`
         })
-        export class ${component.name}DocumentationComponent {
+        export class ${name} {
             ${generateBindingString(component.inputs)}
             ${generateEventString(component.outputs)}
         }
-    `;
+    `, [
+        {
+            library: '@angular/core',
+            name: 'Component'
+        }
+    ]);
 }
 
 function generateBindingString(inputs: Array<Property>): string {
@@ -40,16 +39,6 @@ function generateEventString(outputs: Array<Property>): string {
             public ${output.name}(...args: any[]) {
                 console.log(args);
             }
-        `;
-
-        return acc;
-    }, '');
-}
-
-function generateTokens(providers: Array<Provider>): string {
-    return providers.reduce<string>((acc: string, provider: Provider) => {
-        acc += `
-        class ${provider.tokenName} {}
         `;
 
         return acc;

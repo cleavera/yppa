@@ -1,1 +1,1 @@
-export { $orchestratorGenerator } from './helpers/orchestrator-generator.helper';
+export { $documentationGenerator } from './helpers/documentation-generator.helper';
