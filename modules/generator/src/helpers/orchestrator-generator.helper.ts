@@ -1,11 +1,9 @@
-import { IDict } from '@cleavera/utils';
 import { Component, Property, Provider } from '@yppa/parser';
-import { $generateObject } from './object-generator.helper';
 import { $providerGenerator } from './provider-generator.helper';
 import { $templateGenerator } from './template-generator.helper';
+import { $typeGenerator } from './type-generator.helper';
 
 export function $orchestratorGenerator(component: Component): string {
-    const inputs: IDict<any> = $generateObject(component.inputs);
     const template: string = $templateGenerator(component.element);
 
     return `
@@ -20,26 +18,20 @@ export function $orchestratorGenerator(component: Component): string {
             template: \`${template}\`
         })
         export class ${component.name}DocumentationComponent {
-            ${generateBindingString(inputs)}
+            ${generateBindingString(component.inputs)}
             ${generateEventString(component.outputs)}
         }
     `;
 }
 
-function generateBindingString(scope: IDict<any>): string {
-    let properties: string = '';
-
-    for (const key in scope) {
-        if (!scope.hasOwnProperty(key)) {
-            continue;
-        }
-
-        properties += `
-            public ${key} = ${JSON.stringify(scope[key])};
+function generateBindingString(inputs: Array<Property>): string {
+    return inputs.reduce<string>((acc: string, input: Property): string => {
+        acc += `
+            public ${input.name} = ${$typeGenerator(input)};
         `;
-    }
 
-    return properties;
+        return acc;
+    }, '');
 }
 
 function generateEventString(outputs: Array<Property>): string {
