@@ -1,6 +1,7 @@
 import { IDict } from '@cleavera/utils';
-import { Component, Property } from '@yppa/parser';
+import { Component, Property, Provider } from '@yppa/parser';
 import { $generateObject } from './object-generator.helper';
+import { $providerGenerator } from './provider-generator.helper';
 import { $templateGenerator } from './template-generator.helper';
 
 export function $orchestratorGenerator(component: Component): string {
@@ -11,6 +12,9 @@ export function $orchestratorGenerator(component: Component): string {
         import { Component } from '@angular/core';
 
         @Component({
+            providers: [${component.providers.map((provider: Provider) => {
+                return $providerGenerator(provider);
+            }).join(', ')}],
             template: \`${template}\`
         })
         export class ${component.name}DocumentationComponent {
