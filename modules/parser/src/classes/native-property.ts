@@ -1,4 +1,4 @@
-import { Maybe } from '@cleavera/utils/dist';
+import { Maybe } from '@cleavera/utils';
 import { NativeType } from '../constants/native-type.constant';
 import { Property } from './property';
 

@@ -1,4 +1,4 @@
-import { Maybe } from '@cleavera/utils/dist';
+import { Maybe } from '@cleavera/utils';
 
 export class Property {
     public name: string;

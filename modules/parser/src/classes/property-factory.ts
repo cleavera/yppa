@@ -1,4 +1,4 @@
-import { $isNull, Maybe } from '@cleavera/utils/dist';
+import { $isNull, Maybe } from '@cleavera/utils';
 import { Decorator, Node, Signature, StringLiteral, Symbol, Type } from 'ts-simple-ast';
 import { NativeType } from '../constants/native-type.constant';
 import { DecoratorNotStringError } from '../errors/decorator-not-string.error';

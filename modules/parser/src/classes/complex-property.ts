@@ -1,4 +1,4 @@
-import { Maybe } from '@cleavera/utils/dist';
+import { Maybe } from '@cleavera/utils';
 import { Property } from './property';
 
 export class ComplexProperty extends Property {

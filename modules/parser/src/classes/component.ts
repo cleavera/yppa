@@ -1,4 +1,4 @@
-import { $isNull, Maybe } from '@cleavera/utils/dist';
+import { $isNull, Maybe } from '@cleavera/utils';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
@@ -20,10 +20,12 @@ export class Component {
     public element: Element;
     public name: string;
     public template: string;
+    public path: string;
 
-    constructor(properties: Array<Property>, selector: string, template: string, name: string, providers: Array<Provider>) {
+    constructor(properties: Array<Property>, selector: string, template: string, name: string, providers: Array<Provider>, path: string) {
         this.template = template;
         this.name = name;
+        this.path = path;
         this.providers = providers;
         this.properties = properties;
         this.inputs = properties.filter((property: Property) => {
@@ -90,7 +92,7 @@ export class Component {
             throw new ClassDoesNotHaveANameError(declaration.getText());
         }
 
-        return new Component(properties, selector, template, symbol.getName(), providers);
+        return new Component(properties, selector, template, symbol.getName(), providers, declaration.getSourceFile().getFilePath());
     }
 
     private static getLiteralValue(prop: ObjectLiteralElementLike): string {
