@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "@yppa/cli": "^0.5.0",
-    "@yppa/generator": "^0.5.0",
-    "@yppa/parser": "^0.3.0"
+    "@yppa/generator": "^0.6.0",
+    "@yppa/parser": "^0.4.0"
   }
 }
