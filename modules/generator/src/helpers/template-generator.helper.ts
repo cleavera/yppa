@@ -1,4 +1,4 @@
-import { $isNull, Maybe } from '@cleavera/utils/dist';
+import { $isNull, Maybe } from '@cleavera/utils';
 import { Element } from '@yppa/parser/';
 
 export function $templateGenerator(element: Element): string {

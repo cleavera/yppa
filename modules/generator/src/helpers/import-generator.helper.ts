@@ -22,7 +22,7 @@ export function $importGenerator(...declarations: Array<Declaration>): string {
             continue;
         }
 
-        out += `import { ${declarationDictionary[library].join(', ')} } from '${library}';`;
+        out += `import { ${declarationDictionary[library].join(', ')} } from '${library}';\n`;
     }
 
     return out;

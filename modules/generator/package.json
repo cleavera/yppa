@@ -19,6 +19,6 @@
   },
   "dependencies": {
     "@cleavera/utils": "^1.2.0",
-    "@yppa/parser": "^0.3.0"
+    "@yppa/parser": "^0.4.0"
   }
 }
