@@ -10,7 +10,7 @@ import { NativeProperty } from './native-property';
 import { Property } from './property';
 
 export class PropertyFactory {
-    public static FromProperty(type: Type, propertySymbol: Maybe<Symbol> = null, decorators: Array<Decorator> = []): Property {
+    public static FromProperty(type: Type, propertySymbol: Maybe<Symbol> = null, parsedTypes: Array<string> = [], decorators: Array<Decorator> = []): Property {
         if ($isNull(propertySymbol)) {
             throw new PropertyDoesNotHaveANameError(type.getText());
         }
@@ -49,6 +49,10 @@ export class PropertyFactory {
             }
         });
 
+        if (type.isArray() || text === 'any' || text === 'unknown' || parsedTypes.indexOf(text) > -1) {
+            return new NativeProperty(NativeType.unknown, propertySymbol.getName(), bindingName, eventName);
+        }
+
         if (type.isString()) {
             return new NativeProperty(NativeType.string, propertySymbol.getName(), bindingName, eventName);
         }
@@ -61,14 +65,12 @@ export class PropertyFactory {
             return new NativeProperty(NativeType.number, propertySymbol.getName(), bindingName, eventName);
         }
 
-        if (text === 'any' || text === 'unknown') {
-            return new NativeProperty(NativeType.unknown, propertySymbol.getName(), bindingName, eventName);
-        }
+        parsedTypes.push(text);
 
         const callSignature: Array<Signature> = type.getCallSignatures();
 
         if (callSignature.length) {
-            return new MethodProperty(this.FromProperty(callSignature[0].getReturnType(), propertySymbol), propertySymbol.getName());
+            return new MethodProperty(this.FromProperty(callSignature[0].getReturnType(), propertySymbol, parsedTypes.slice()), propertySymbol.getName());
         }
 
         const properties: Array<Symbol> = type.getProperties();
@@ -81,7 +83,7 @@ export class PropertyFactory {
                     throw new PropertyHasNoDeclarationError(child.getName());
                 }
 
-                return this.FromProperty(declaration.getType(), child);
+                return this.FromProperty(declaration.getType(), child, parsedTypes.slice());
             }), propertySymbol.getName(), bindingName, eventName);
         }
 

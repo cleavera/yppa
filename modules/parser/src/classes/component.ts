@@ -83,7 +83,7 @@ export class Component {
         }, []);
 
         const properties: Array<Property> = declaration.getInstanceProperties().map((property: PropertyDeclaration): Property => {
-            return PropertyFactory.FromProperty(property.getType(), property.getSymbol(), property.getDecorators());
+            return PropertyFactory.FromProperty(property.getType(), property.getSymbol(), [], property.getDecorators());
         });
 
         const symbol: Maybe<Symbol> = declaration.getSymbol() || null;
