@@ -14,6 +14,9 @@ export function $documentationGenerator(component: Component): string {
     const module: Declaration = $moduleGenerator(orchestrator, providers, component);
 
     return `
+        import 'reflect-metadata';
+        import 'zone.js';
+
         ${$importGenerator(orchestrator, ...providers, module)}
 
         ${orchestrator.text}
