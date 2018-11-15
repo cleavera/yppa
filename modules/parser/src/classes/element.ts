@@ -36,7 +36,7 @@ export class Element {
             return '';
         });
 
-        const [tag, ...classNames]: Array<string> = selector.split('.') as Array<string>;
+        const [tag, ...classNames]: Array<string> = selector.split('.');
 
         const propertyBindings: IDict<string> = inputs.reduce<IDict<string>>((bindings: IDict<string>, property: Property): IDict<string> => {
             bindings[property.bindingName as string] = property.name;

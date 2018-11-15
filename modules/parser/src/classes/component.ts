@@ -6,6 +6,7 @@ import { ClassDeclaration, ConstructorDeclaration, Decorator, Expression, NoSubs
 import { ClassDoesNotHaveANameError } from '../errors/class-does-not-have-a-name.error';
 import { DeclarationNotAComponentError } from '../errors/declaration-not-a-component.error';
 import { ExpressionNotLiteralValueError } from '../errors/expression-not-literal-value.error';
+import { ParseError } from '../errors/parse.error';
 import { PropertyDoesNotHaveANameError } from '../errors/property-does-not-have-a-name.error';
 import { Element } from './element';
 import { Property } from './property';
@@ -44,6 +45,12 @@ export class Component {
         let selector: string = '';
         let template: string = '';
 
+        const symbol: Maybe<Symbol> = declaration.getSymbol() || null;
+
+        if ($isNull(symbol)) {
+            throw new ClassDoesNotHaveANameError(declaration.getText());
+        }
+
         declaration.getDecorators().forEach((decorator: Decorator) => {
             if (decorator.getName() === 'Component') {
                 isComponent = true;
@@ -78,19 +85,21 @@ export class Component {
             .getConstructors()
             .reduce<Array<Provider>>((arr: Array<Provider>, constructor: ConstructorDeclaration): Array<Provider> => {
                 return arr.concat(constructor.getParameters().map((parameter: ParameterDeclaration): Provider => {
-                    return Provider.FromType(parameter.getType(), parameter.getSymbol(), parameter.getDecorators());
+                    try {
+                        return Provider.FromType(parameter.getType(), parameter.getSymbol(), parameter.getDecorators());
+                    } catch (e) {
+                        return ParseError.appendLocation(e, symbol.getName());
+                    }
                 }));
         }, []);
 
         const properties: Array<Property> = declaration.getInstanceProperties().map((property: PropertyDeclaration): Property => {
-            return PropertyFactory.FromProperty(property.getType(), property.getSymbol(), [], property.getDecorators());
+            try {
+                return PropertyFactory.FromProperty(property.getType(), property.getSymbol(), [], property.getDecorators());
+            } catch (e) {
+                return ParseError.appendLocation(e, symbol.getName());
+            }
         });
-
-        const symbol: Maybe<Symbol> = declaration.getSymbol() || null;
-
-        if ($isNull(symbol)) {
-            throw new ClassDoesNotHaveANameError(declaration.getText());
-        }
 
         return new Component(properties, selector, template, symbol.getName(), providers, declaration.getSourceFile().getFilePath());
     }

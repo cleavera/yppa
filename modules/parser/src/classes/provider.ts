@@ -1,6 +1,7 @@
 import { $isNull, $isUndefined, Maybe } from '@cleavera/utils';
 import { Decorator, Node, Symbol, Type } from 'ts-simple-ast';
 import { DecoratorMissingRequiredArgumentError } from '../errors/decorator-missing-required-argument.error';
+import { ParseError } from '../errors/parse.error';
 import { ProviderDoesNotHaveTokenError } from '../errors/provider-does-not-have-token.error';
 import { Property } from './property';
 import { PropertyFactory } from './property-factory';
@@ -43,6 +44,10 @@ export class Provider {
             throw new ProviderDoesNotHaveTokenError(type.getText());
         }
 
-        return new Provider(PropertyFactory.FromProperty(type, symbol), tokenName, path);
+        try {
+            return new Provider(PropertyFactory.FromProperty(type, symbol), tokenName, path);
+        } catch (e) {
+            return ParseError.appendLocation(e, tokenName);
+        }
     }
 }

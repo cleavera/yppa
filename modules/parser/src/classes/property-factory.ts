@@ -2,6 +2,7 @@ import { $isNull, Maybe } from '@cleavera/utils';
 import { Decorator, Node, Signature, StringLiteral, Symbol, Type } from 'ts-simple-ast';
 import { NativeType } from '../constants/native-type.constant';
 import { DecoratorNotStringError } from '../errors/decorator-not-string.error';
+import { ParseError } from '../errors/parse.error';
 import { PropertyDoesNotHaveANameError } from '../errors/property-does-not-have-a-name.error';
 import { PropertyHasNoDeclarationError } from '../errors/property-has-no-declaration.error';
 import { ComplexProperty } from './complex-property';
@@ -70,7 +71,11 @@ export class PropertyFactory {
         const callSignature: Array<Signature> = type.getCallSignatures();
 
         if (callSignature.length) {
-            return new MethodProperty(this.FromProperty(callSignature[0].getReturnType(), propertySymbol, parsedTypes.slice()), propertySymbol.getName());
+            try {
+                return new MethodProperty(this.FromProperty(callSignature[0].getReturnType(), propertySymbol, parsedTypes.slice()), propertySymbol.getName());
+            } catch (e) {
+                return ParseError.appendLocation(e, propertySymbol.getName());
+            }
         }
 
         const properties: Array<Symbol> = type.getProperties();
@@ -83,7 +88,11 @@ export class PropertyFactory {
                     throw new PropertyHasNoDeclarationError(child.getName());
                 }
 
-                return this.FromProperty(declaration.getType(), child, parsedTypes.slice());
+                try {
+                    return this.FromProperty(declaration.getType(), child, parsedTypes.slice());
+                } catch (e) {
+                    return ParseError.appendLocation(e, propertySymbol.getName());
+                }
             }), propertySymbol.getName(), bindingName, eventName);
         }
 

@@ -1,4 +1,5 @@
 import { ClassDeclaration, Project as ProjectAST, SourceFile } from 'ts-simple-ast';
+import { ParseError } from '../errors/parse.error';
 import { Component } from './component';
 
 export class Project {
@@ -15,7 +16,12 @@ export class Project {
 
         const components: Array<Component> = ast.getSourceFiles().reduce((acc: Array<Component>, file: SourceFile) => {
             return acc.concat(file.getClasses().map((item: ClassDeclaration) => {
-                return Component.FromDeclaration(item);
+                try {
+                    return Component.FromDeclaration(item);
+
+                } catch (e) {
+                    return ParseError.appendLocation(e, `"${file.getFilePath()}"`);
+                }
             }));
         }, []);
 
