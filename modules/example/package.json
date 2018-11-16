@@ -8,21 +8,38 @@
     "test": "alsatian ./src/**/*.spec.ts",
     "lint": "tslint --project ./tsconfig.json",
     "prepack": "exit 1",
-    "run": "yppa --src=\"./src/**/*.component.ts\" --out=\"./dist\""
+    "generate": "yppa --src=\"./src/**/*.component.ts\" --out=\"./docs\" && webpack"
   },
   "author": "Anthony Cleaver",
   "license": "ISC",
   "private": true,
   "devDependencies": {
-    "@angular/core": "^7.0.1",
     "@types/node": "^10.12.0",
     "alsatian": "^2.3.0",
+    "angular2-template-loader": "^0.6.2",
+    "html-webpack-plugin": "^3.2.0",
+    "node-sass": "^4.10.0",
+    "raw-loader": "^0.5.1",
+    "sass-loader": "^7.1.0",
+    "ts-loader": "^5.3.0",
     "tslint": "^5.11.0",
-    "typescript": "^3.1.3"
+    "typescript": "^3.1.3",
+    "uglifyjs-webpack-plugin": "^2.0.1",
+    "webpack": "^4.25.1",
+    "webpack-cli": "^3.1.2"
   },
   "dependencies": {
-    "@yppa/cli": "^0.6.0",
-    "@yppa/generator": "^0.6.0",
-    "@yppa/parser": "^0.4.0"
+    "@angular/common": "^7.0.3",
+    "@angular/compiler": "^7.0.3",
+    "@angular/core": "^7.0.1",
+    "@angular/elements": "^7.0.3",
+    "@angular/platform-browser": "^7.0.3",
+    "@angular/platform-browser-dynamic": "^7.0.3",
+    "@yppa/cli": "^0.9.0",
+    "@yppa/generator": "^0.9.0",
+    "@yppa/parser": "^0.6.0",
+    "reflect-metadata": "^0.1.12",
+    "rxjs": "^6.3.3",
+    "zone.js": "^0.8.26"
   }
 }

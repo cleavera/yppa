@@ -1,10 +1,10 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { IAction } from '../interfaces/action.interface';
-import { ActionFetcherService } from '../services/action-fetcher.service';
+import { IAction } from '../../interfaces/action.interface';
+import { ActionFetcherService } from '../../services/action-fetcher.service';
 
 @Component({
     selector: 'app-home',
-    styleUrls: ['./home.component.css'],
+    styleUrls: ['./home.component.scss'],
     templateUrl: './home.component.html'
 })
 export class HomeComponent {
