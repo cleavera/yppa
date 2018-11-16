@@ -9,6 +9,7 @@ export function $orchestratorGenerator(component: Component): Declaration {
 
     return new Declaration(name, `
         @Component({
+            selector: 'yppa-doc',
             template: \`${template}\`
         })
         export class ${name} {
