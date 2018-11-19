@@ -1,12 +1,22 @@
 :host {
   border: 1px solid;
   display: block;
+  font-family: Calibri, sans-serif;
   margin: 10px;
   padding: 20px;
+  position: relative;
   width: 400px;
 }
 
 h1 {
-  background: #900;
-  color: #aaf;
+  color: #339;
+  font-family: "Century Gothic", sans-serif;
+  font-weight: normal;
+}
+
+a {
+  margin: 10px;
+  position: absolute;
+  right: 0;
+  top: 0;
 }
