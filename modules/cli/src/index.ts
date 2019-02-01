@@ -16,13 +16,21 @@ const { src, out, depth }: { src: string, out: string, depth: number } = require
 
 process.env.max_depth = depth.toString(10);
 
+if (!existsSync(out)) {
+    mkdirSync(out, {
+        recursive: true
+    });
+}
+
 Project.FromGlob(src).components.forEach((component: Component) => {
-    if (!existsSync(out)) {
-        mkdirSync(out, {
+    const componentOut: string = join(out, component.element.selector);
+
+    if (!existsSync(componentOut)) {
+        mkdirSync(componentOut, {
             recursive: true
         });
     }
 
-    writeFileSync(join(out, 'doc.ts'), $documentationGenerator(component));
-    writeFileSync(join(out, 'index.html'), $indexGenerator());
+    writeFileSync(join(componentOut, 'index.ts'), $documentationGenerator(component));
+    writeFileSync(join(componentOut, 'index.html'), $indexGenerator());
 });

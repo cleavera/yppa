@@ -6,7 +6,7 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = {
     entry: {
-        'main': path.resolve(__dirname, './docs/doc.ts')
+        'main': path.resolve(__dirname, './docs/app-home/index.ts')
     },
 
     output: {
@@ -54,7 +54,7 @@ module.exports = {
 
     plugins: [
         new HtmlWebpackPlugin({
-            template: './docs/index.html',
+            template: './docs/app-home/index.html',
             inject: 'body'
         }),
         new webpack.ContextReplacementPlugin(

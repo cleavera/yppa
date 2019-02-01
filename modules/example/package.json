@@ -35,7 +35,7 @@
     "@angular/elements": "^7.0.3",
     "@angular/platform-browser": "^7.0.3",
     "@angular/platform-browser-dynamic": "^7.0.3",
-    "@yppa/cli": "^0.11.0",
+    "@yppa/cli": "^0.12.0",
     "@yppa/generator": "^0.11.0",
     "@yppa/parser": "^0.8.0",
     "reflect-metadata": "^0.1.12",
