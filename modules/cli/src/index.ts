@@ -23,7 +23,7 @@ if (!existsSync(out)) {
 }
 
 Project.FromGlob(src).components.forEach((component: Component) => {
-    const componentOut: string = join(out, component.element.selector);
+    const componentOut: string = join(out, component.name);
 
     if (!existsSync(componentOut)) {
         mkdirSync(componentOut, {
