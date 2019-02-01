@@ -14,6 +14,9 @@ export class HomeComponent {
     @Input('mhrHelloWorld')
     public hello2World: IAction;
 
+    @Input()
+    public hello3World: Array<string>;
+
     @Output()
     public onClick: EventEmitter<void> = new EventEmitter();
 

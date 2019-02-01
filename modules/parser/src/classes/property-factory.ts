@@ -62,7 +62,7 @@ export class PropertyFactory {
                 throw new ArrayDoesNotHaveATypeError(propertySymbol.getName());
             }
 
-            return new ArrayProperty(this.FromProperty(arrayType, arrayType.getSymbol(), parsedTypes.slice(), undefined, depth), propertySymbol.getName(), bindingName, eventName);
+            return new ArrayProperty(this.FromProperty(arrayType, propertySymbol, parsedTypes.slice(), undefined, depth), propertySymbol.getName(), bindingName, eventName);
         }
 
         if (text === 'any' || text === 'unknown' || parsedTypes.indexOf(text) > -1) {
