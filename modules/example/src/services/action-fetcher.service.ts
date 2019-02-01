@@ -6,10 +6,10 @@ export class ActionFetcherService {
         label: 'The beeb'
     };
 
-    public getAction(label: string): IAction {
-        return {
+    public getActions(label: string): Array<IAction> {
+        return [{
             url: 'http://google.com',
             label
-        };
+        }];
     }
 }

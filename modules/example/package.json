@@ -35,9 +35,9 @@
     "@angular/elements": "^7.0.3",
     "@angular/platform-browser": "^7.0.3",
     "@angular/platform-browser-dynamic": "^7.0.3",
-    "@yppa/cli": "^0.9.0",
-    "@yppa/generator": "^0.9.0",
-    "@yppa/parser": "^0.6.0",
+    "@yppa/cli": "^0.10.0",
+    "@yppa/generator": "^0.10.0",
+    "@yppa/parser": "^0.7.0",
     "reflect-metadata": "^0.1.12",
     "rxjs": "^6.3.3",
     "zone.js": "^0.8.26"

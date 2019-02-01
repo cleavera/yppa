@@ -21,9 +21,10 @@ export class HomeComponent {
     public onDoubleClick: EventEmitter<boolean> = new EventEmitter();
 
     public action: IAction;
+    public actions: Array<IAction>;
 
     constructor(actionFetcherService: ActionFetcherService) {
         this.action = actionFetcherService.defaultAction;
-        this.action = actionFetcherService.getAction('hello');
+        this.actions = actionFetcherService.getActions('hello');
     }
 }

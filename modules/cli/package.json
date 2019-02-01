@@ -1,6 +1,6 @@
 {
   "name": "@yppa/cli",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "description": "",
   "bin": {
     "yppa": "./dist/index.js"
@@ -12,7 +12,7 @@
     "prepack": "npm run lint && npm run build"
   },
   "author": "Anthony Cleaver",
-  "license": "ISC",
+  "license": "ISC",.
   "devDependencies": {
     "@types/node": "^10.12.2",
     "alsatian": "^2.3.0",
@@ -20,8 +20,8 @@
     "typescript": "^3.1.6"
   },
   "dependencies": {
-    "@yppa/generator": "^0.9.0",
-    "@yppa/parser": "^0.6.0",
+    "@yppa/generator": "^0.10.0",
+    "@yppa/parser": "^0.7.0",
     "yargs": "^12.0.2"
   }
 }

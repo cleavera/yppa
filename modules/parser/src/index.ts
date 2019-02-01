@@ -1,3 +1,4 @@
+export { ArrayProperty } from './classes/array-property';
 export { Provider } from './classes/provider';
 export { MethodProperty } from './classes/method-property';
 export { Component } from './classes/component';

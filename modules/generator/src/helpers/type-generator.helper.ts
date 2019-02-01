@@ -1,5 +1,5 @@
-import { ComplexProperty, MethodProperty, NativeProperty, Property } from '@yppa/parser';
-import { PropertyNotImplementedError } from '../errors/property-not-implemented.error';
+import { ArrayProperty, ComplexProperty, MethodProperty, NativeProperty, Property } from '@yppa/parser';
+import { $generateArray } from './array-generator.helper';
 import { $generateMethodProperty } from './method-generator.helper';
 import { $generateObject } from './object-generator.helper';
 import { $generateNativeProperty } from './property-generator.helper';
@@ -11,7 +11,9 @@ export function $typeGenerator(type: Property): string {
         return $generateObject(type.children);
     } else if (type instanceof MethodProperty) {
         return $generateMethodProperty(type);
+    } else if (type instanceof ArrayProperty) {
+        return $generateArray(type);
+    } else {
+        return '{}';
     }
-
-    throw new PropertyNotImplementedError(type);
 }
